@@ -13,12 +13,12 @@
    Bump CACHE_VERSION on every deploy so returning users pick up the
    new files instead of a stale cached copy. */
 
-var CACHE_VERSION = "v1";
+var CACHE_VERSION = "v2";
 var CACHE_NAME = "vehicle-dossier-" + CACHE_VERSION;
 
 var APP_SHELL = [
   "./",
-  "./vehicle-dossier.html",
+  "./index.html",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
