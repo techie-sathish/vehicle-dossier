@@ -2,7 +2,7 @@
   "name": "Vehicle Document Dossier",
   "short_name": "Vehicle Dossier",
   "description": "Field capture and PDF report for vehicle and owner documents",
-  "start_url": "./vehicle-dossier.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
