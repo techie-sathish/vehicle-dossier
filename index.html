@@ -963,6 +963,104 @@
         overflow: hidden;
         pointer-events: none;
       }
+
+      /* ---------- language switch (topbar) ---------- */
+      .lang-switch {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 99px;
+        padding: 2px;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+      .lang-switch button {
+        border: none;
+        background: transparent;
+        color: var(--ink-soft);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        padding: 4px 9px;
+        border-radius: 99px;
+        cursor: pointer;
+        line-height: 1.2;
+      }
+      .lang-switch button.active {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .topbar-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+
+      /* ---------- generic on/off toggle switch ---------- */
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        margin: 10px 0 4px;
+      }
+      .toggle-row-text {
+        min-width: 0;
+      }
+      .toggle-row-title {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .toggle-row-desc {
+        font-size: 11px;
+        color: var(--ink-faint);
+        margin-top: 2px;
+        line-height: 1.35;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 25px;
+        flex-shrink: 0;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switch .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: var(--line-strong);
+        border-radius: 99px;
+        transition: background 0.2s ease;
+      }
+      .switch .slider::before {
+        content: "";
+        position: absolute;
+        height: 19px;
+        width: 19px;
+        left: 3px;
+        top: 3px;
+        background: var(--surface);
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      }
+      .switch input:checked + .slider {
+        background: var(--good);
+      }
+      .switch input:checked + .slider::before {
+        transform: translateX(17px);
+      }
     </style>
   </head>
   <body>
@@ -987,18 +1085,29 @@
             </svg>
           </div>
           <div class="brand-text">
-            <b>Vehicle Document Dossier</b>
-            <span>Field capture &amp; report</span>
+            <b data-i18n="brandTitle">Vehicle Document Dossier</b>
+            <span data-i18n="brandSubtitle">Field capture &amp; report</span>
           </div>
         </div>
-        <div class="progress-wrap">
-          <span class="progress-num" id="progressNum">0 / 10</span>
-          <div class="progress-track">
-            <div
-              class="progress-fill"
-              id="progressFill"
-              style="width: 0%"
-            ></div>
+        <div class="topbar-controls">
+          <div
+            class="lang-switch"
+            id="langSwitch"
+            role="group"
+            aria-label="Language"
+          >
+            <button type="button" id="langBtnEn" data-lang="en">EN</button>
+            <button type="button" id="langBtnTa" data-lang="ta">TA</button>
+          </div>
+          <div class="progress-wrap">
+            <span class="progress-num" id="progressNum">0 / 10</span>
+            <div class="progress-track">
+              <div
+                class="progress-fill"
+                id="progressFill"
+                style="width: 0%"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1006,11 +1115,15 @@
 
     <div class="wrap">
       <div class="hero">
-        <p class="eyebrow">New submission</p>
-        <h1 class="title">Capture vehicle &amp; owner documents</h1>
+        <p class="eyebrow" data-i18n="eyebrow">New submission</p>
+        <h1 class="title" data-i18n="heroTitle">
+          Capture vehicle &amp; owner documents
+        </h1>
 
         <div class="plate-field" id="fieldVehicle">
-          <div class="plate-label">Vehicle registration number</div>
+          <div class="plate-label" data-i18n="vehicleNoLabel">
+            Vehicle registration number
+          </div>
           <div class="plate-shell">
             <div class="plate-nation"><em>IND</em>PLATE</div>
             <div class="plate-input-box">
@@ -1018,6 +1131,7 @@
                 id="vehicleNo"
                 type="text"
                 placeholder="KA 01 AB 1234"
+                data-i18n-placeholder="vehicleNoPlaceholder"
                 autocapitalize="characters"
                 autocomplete="off"
                 spellcheck="false"
@@ -1025,41 +1139,51 @@
               />
             </div>
           </div>
-          <div class="hint">Vehicle registration number is required</div>
+          <div class="hint" data-i18n="vehicleNoHint">
+            Vehicle registration number is required
+          </div>
         </div>
 
         <div class="grid-2">
           <div class="field" id="fieldOwner">
-            <label for="ownerName">Owner name</label>
+            <label for="ownerName" data-i18n="ownerNameLabel">Owner name</label>
             <input
               id="ownerName"
               type="text"
               placeholder="Full name"
+              data-i18n-placeholder="ownerNamePlaceholder"
               autocomplete="name"
             />
-            <div class="hint">Owner name is required</div>
+            <div class="hint" data-i18n="ownerNameHint">
+              Owner name is required
+            </div>
           </div>
           <div class="field" id="fieldMobile">
-            <label for="mobileNumber">Mobile number</label>
+            <label for="mobileNumber" data-i18n="mobileNumberLabel"
+              >Mobile number</label
+            >
             <input
               id="mobileNumber"
               type="tel"
               placeholder="10-digit mobile number"
+              data-i18n-placeholder="mobileNumberPlaceholder"
               inputmode="numeric"
               maxlength="10"
               autocomplete="tel"
             />
-            <div class="hint">Enter a valid mobile number</div>
+            <div class="hint" data-i18n="mobileNumberHint">
+              Enter a valid mobile number
+            </div>
           </div>
         </div>
       </div>
 
       <div class="section">
         <div class="section-head">
-          <h2>Identity documents</h2>
+          <h2 data-i18n="sectionIdentityTitle">Identity documents</h2>
           <span class="count" data-group-count="identity">0 / 5</span>
         </div>
-        <p class="section-desc">
+        <p class="section-desc" data-i18n="sectionIdentityDesc">
           Aadhaar card and RC book, both sides, plus previous insurance.
           Aadhaar, RC and insurance can be captured as a photo or uploaded
           directly as a PDF file.
@@ -1069,21 +1193,38 @@
 
       <div class="section">
         <div class="section-head">
-          <h2>Vehicle photos</h2>
+          <h2 data-i18n="sectionVehicleTitle">Vehicle photos</h2>
           <span class="count" data-group-count="vehicle">0 / 4</span>
         </div>
-        <p class="section-desc">
+        <p class="section-desc" data-i18n="sectionVehicleDesc">
           All four sides of the vehicle, in good light.
         </p>
+        <div class="toggle-row" id="gpsToggleRow">
+          <div class="toggle-row-text">
+            <div class="toggle-row-title" data-i18n="gpsToggleTitle">
+              GPS location tag
+            </div>
+            <div class="toggle-row-desc" data-i18n="gpsToggleDesc">
+              Stamp the location on vehicle photos, for both camera capture and
+              upload
+            </div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="gpsToggleInput" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
         <div class="grid-2" id="groupVehicle"></div>
       </div>
 
       <div class="section">
         <div class="section-head">
-          <h2>Meter &amp; chassis</h2>
+          <h2 data-i18n="sectionMetaTitle">Meter &amp; chassis</h2>
           <span class="count" data-group-count="meta">0 / 2</span>
         </div>
-        <p class="section-desc">Odometer reading and chassis number plate.</p>
+        <p class="section-desc" data-i18n="sectionMetaDesc">
+          Odometer reading and chassis number plate.
+        </p>
         <div class="grid-2" id="groupMeta"></div>
       </div>
 
@@ -1098,7 +1239,7 @@
           <circle cx="12" cy="12" r="10" />
           <path d="M12 16v-4M12 8h.01" />
         </svg>
-        <span
+        <span data-i18n="footnote"
           >Everything on this page stays on this device until you generate the
           PDF. Photos are automatically compressed before they're saved, so the
           final file stays a manageable size even if your camera shoots
@@ -1109,7 +1250,12 @@
 
     <div class="actionbar">
       <div class="actionbar-inner">
-        <button class="btn btn-reset" id="btnReset" title="Reset all">
+        <button
+          class="btn btn-reset"
+          id="btnReset"
+          title="Reset all"
+          data-i18n-title="btnResetTitle"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -1134,7 +1280,7 @@
             />
             <polyline points="14 2 14 8 20 8" />
           </svg>
-          Generate &amp; Download PDF
+          <span data-i18n="btnGenerate">Generate &amp; Download PDF</span>
         </button>
         <button class="btn btn-whatsapp" id="btnShare">
           <svg
@@ -1148,7 +1294,7 @@
               d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
             />
           </svg>
-          Share on WhatsApp
+          <span data-i18n="btnShare">Share on WhatsApp</span>
         </button>
       </div>
     </div>
@@ -1168,16 +1314,26 @@
       <div class="lightbox-title" id="lightboxTitle"></div>
       <img id="lightboxImg" src="" alt="" />
       <div class="lightbox-actions">
-        <button class="btn-tiny" id="lightboxAdjust">Adjust crop</button>
-        <button class="btn-tiny" id="lightboxRetake">Retake / Replace</button>
-        <button class="btn-tiny danger" id="lightboxDelete">Delete</button>
+        <button class="btn-tiny" id="lightboxAdjust" data-i18n="lightboxAdjust">
+          Adjust crop
+        </button>
+        <button class="btn-tiny" id="lightboxRetake" data-i18n="lightboxRetake">
+          Retake / Replace
+        </button>
+        <button
+          class="btn-tiny danger"
+          id="lightboxDelete"
+          data-i18n="lightboxDelete"
+        >
+          Delete
+        </button>
       </div>
     </div>
 
     <div class="cropper-overlay" id="cropperOverlay">
       <div class="cropper-body">
         <div class="cropper-title" id="cropperTitle">Adjust crop</div>
-        <div class="cropper-hint">
+        <div class="cropper-hint" data-i18n="cropperHint">
           Drag any corner freely to crop the exact area you want. Use the slider
           to straighten a tilted shot before cropping.
         </div>
@@ -1197,6 +1353,7 @@
               id="cropRotateCCW"
               title="Rotate 90° left"
               aria-label="Rotate 90 degrees left"
+              data-i18n-title="cropRotateCCWTitle"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -1222,6 +1379,7 @@
               id="cropRotateCW"
               title="Rotate 90° right"
               aria-label="Rotate 90 degrees right"
+              data-i18n-title="cropRotateCWTitle"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -1237,9 +1395,19 @@
             <div class="cropper-rotate-value" id="cropRotateValue">0°</div>
           </div>
           <div class="cropper-actions">
-            <button class="btn-tiny" id="cropCancel">Cancel</button>
-            <button class="btn-tiny" id="cropReset">Reset</button>
-            <button class="btn-tiny primary" id="cropConfirm">Use photo</button>
+            <button class="btn-tiny" id="cropCancel" data-i18n="cropCancel">
+              Cancel
+            </button>
+            <button class="btn-tiny" id="cropReset" data-i18n="cropReset">
+              Reset
+            </button>
+            <button
+              class="btn-tiny primary"
+              id="cropConfirm"
+              data-i18n="cropConfirm"
+            >
+              Use photo
+            </button>
           </div>
         </div>
       </div>
@@ -28183,6 +28351,7 @@
             group: "identity",
             target: "groupIdentity",
             title: "Aadhaar card — Front",
+            titleTa: "ஆதார் அட்டை — முன்பக்கம்",
             icon: "card",
             acceptPdf: true,
           },
@@ -28191,6 +28360,7 @@
             group: "identity",
             target: "groupIdentity",
             title: "Aadhaar card — Back",
+            titleTa: "ஆதார் அட்டை — பின்பக்கம்",
             icon: "card",
             acceptPdf: true,
           },
@@ -28199,6 +28369,7 @@
             group: "identity",
             target: "groupIdentity",
             title: "RC book — Front",
+            titleTa: "பதிவு புத்தகம் (RC) — முன்பக்கம்",
             icon: "book",
             acceptPdf: true,
           },
@@ -28207,6 +28378,7 @@
             group: "identity",
             target: "groupIdentity",
             title: "RC book — Back",
+            titleTa: "பதிவு புத்தகம் (RC) — பின்பக்கம்",
             icon: "book",
             acceptPdf: true,
           },
@@ -28215,6 +28387,7 @@
             group: "identity",
             target: "groupIdentity",
             title: "Previous insurance document",
+            titleTa: "முந்தைய காப்பீட்டு ஆவணம்",
             icon: "book",
             acceptPdf: true,
           },
@@ -28223,6 +28396,7 @@
             group: "vehicle",
             target: "groupVehicle",
             title: "Vehicle — Front side",
+            titleTa: "வாகனம் — முன் பக்கம்",
             icon: "car",
             gpsTag: true,
           },
@@ -28231,6 +28405,7 @@
             group: "vehicle",
             target: "groupVehicle",
             title: "Vehicle — Left side",
+            titleTa: "வாகனம் — இடது பக்கம்",
             icon: "car",
             gpsTag: true,
           },
@@ -28239,6 +28414,7 @@
             group: "vehicle",
             target: "groupVehicle",
             title: "Vehicle — Back side",
+            titleTa: "வாகனம் — பின் பக்கம்",
             icon: "car",
             gpsTag: true,
           },
@@ -28247,6 +28423,7 @@
             group: "vehicle",
             target: "groupVehicle",
             title: "Vehicle — Right side",
+            titleTa: "வாகனம் — வலது பக்கம்",
             icon: "car",
             gpsTag: true,
           },
@@ -28255,6 +28432,7 @@
             group: "meta",
             target: "groupMeta",
             title: "Odometer / KM reading",
+            titleTa: "ஓடோமீட்டர் / கி.மீ. அளவீடு",
             icon: "gauge",
           },
           {
@@ -28262,9 +28440,234 @@
             group: "meta",
             target: "groupMeta",
             title: "Chassis number plate",
+            titleTa: "சேஸி எண் தகடு",
             icon: "hash",
           },
         ];
+
+        /* ================= i18n (English / Tamil) =================
+     LANG controls the whole on-screen UI - labels, buttons, hints,
+     toasts, confirm dialogs and document titles. It does NOT change the
+     generated PDF report: jsPDF's built-in "helvetica" font has no Tamil
+     glyphs, so the exported PDF is always produced in English regardless
+     of the selected UI language (see buildPDF() below). Persisted to
+     localStorage so the choice survives a reload, and applies equally on
+     phone/tablet/desktop since it's the same responsive layout. */
+        var LANG_KEY = "vdd_lang";
+        var I18N = {
+          en: {
+            brandTitle: "Vehicle Document Dossier",
+            brandSubtitle: "Field capture & report",
+            eyebrow: "New submission",
+            heroTitle: "Capture vehicle & owner documents",
+            vehicleNoLabel: "Vehicle registration number",
+            vehicleNoPlaceholder: "KA 01 AB 1234",
+            vehicleNoHint: "Vehicle registration number is required",
+            ownerNameLabel: "Owner name",
+            ownerNamePlaceholder: "Full name",
+            ownerNameHint: "Owner name is required",
+            mobileNumberLabel: "Mobile number",
+            mobileNumberPlaceholder: "10-digit mobile number",
+            mobileNumberHint: "Enter a valid mobile number",
+            sectionIdentityTitle: "Identity documents",
+            sectionIdentityDesc:
+              "Aadhaar card and RC book, both sides, plus previous insurance. Aadhaar, RC and insurance can be captured as a photo or uploaded directly as a PDF file.",
+            sectionVehicleTitle: "Vehicle photos",
+            sectionVehicleDesc: "All four sides of the vehicle, in good light.",
+            gpsToggleTitle: "GPS location tag",
+            gpsToggleDesc:
+              "Stamp the location on vehicle photos, for both camera capture and upload",
+            gpsToggleOnToast: "GPS location tagging turned on",
+            gpsToggleOffToast: "GPS location tagging turned off",
+            sectionMetaTitle: "Meter & chassis",
+            sectionMetaDesc: "Odometer reading and chassis number plate.",
+            footnote:
+              "Everything on this page stays on this device until you generate the PDF. Photos are automatically compressed before they're saved, so the final file stays a manageable size even if your camera shoots 10\u00a0MB+ images.",
+            btnResetTitle: "Reset all",
+            btnGenerate: "Generate & Download PDF",
+            btnShare: "Share on WhatsApp",
+            lightboxAdjust: "Adjust crop",
+            lightboxRetake: "Retake / Replace",
+            lightboxDelete: "Delete",
+            cropperHint:
+              "Drag any corner freely to crop the exact area you want. Use the slider to straighten a tilted shot before cropping.",
+            cropRotateCCWTitle: "Rotate 90° left",
+            cropRotateCWTitle: "Rotate 90° right",
+            cropCancel: "Cancel",
+            cropReset: "Reset",
+            cropConfirm: "Use photo",
+            noImageYet: "No image yet",
+            noImageOrPdfYet: "No image or PDF yet",
+            pdfDocument: "PDF document",
+            page: " page · ",
+            pages: " pages · ",
+            camera: "Camera",
+            upload: "Upload",
+            view: "View",
+            retake: "Retake",
+            replace: "Replace",
+            deleteBtn: "Delete",
+            findingLocation: "Finding location…",
+            preparingImage: "Preparing image…",
+            addingLocationTag: "Adding location tag…",
+            readingPdfPages: "Reading PDF pages…",
+            couldNotReadPdfPages: "Could not read any pages from that PDF",
+            buildingPdf: "Building your PDF…",
+            preparingPdfShare: "Preparing PDF to share…",
+            busyDefault: "Working…",
+            restoredSession: "Restored your previous session",
+            storageFull:
+              "Storage is full - generate/download the PDF soon so nothing is lost",
+            gpsSkipSuffix:
+              ". Skipped - your photo is saved without a location tag; retake it any time to try again.",
+            gpsStampFailed:
+              "Got your location but couldn't stamp it on the photo - saved without a tag",
+            couldNotProcessImage: "Could not process that image",
+            couldNotAttachPdf: "Could not attach that PDF file",
+            validationMissingFields:
+              "Please fill in vehicle number, owner name and a valid mobile number",
+            confirmMissingDocsSuffix:
+              " document photo(s) are not captured yet. Generate the PDF anyway?",
+            savedFilenamePrefix: "Saved ",
+            couldNotGeneratePdfPrefix: "Could not generate the PDF: ",
+            shareCancelled: "Share was cancelled",
+            pdfDownloadedAttach:
+              "PDF downloaded — attach it to WhatsApp manually",
+            couldNotPreparePdfPrefix: "Could not prepare the PDF: ",
+            confirmReset:
+              "Reset the form? All entered details and captured photos will be cleared.",
+            formReset: "Form reset",
+            updateAvailable:
+              "Update available - reopen the app to use the latest version",
+            errHttps:
+              "Location needs HTTPS - open this page over https:// to enable GPS tagging",
+            errFileProtocol:
+              "this page is opened as a local file (file://) - Chrome blocks the location prompt on local files. Host it (even a simple local server) or open it as https:// to enable GPS tagging",
+            errNotSupported: "Geolocation not supported on this device",
+            errPermissionBlocked:
+              'location permission is blocked for this site - tap the lock/info icon next to the address bar > "Site settings" (or "Permissions") > Location > Allow, then retry',
+            errNoFix:
+              "Couldn't get a location fix - check that Location Services is turned on for your phone (Settings → Location), then retry",
+            errPermissionDeniedSaved:
+              'location access is blocked for this site (a previous "Block" choice is saved) - Chrome will not show the popup again until you re-enable it: tap the lock/info icon next to the address bar > "Site settings" (or "Permissions") > Location > Allow, then retry',
+          },
+          ta: {
+            brandTitle: "வாகன ஆவண கோப்பு",
+            brandSubtitle: "புகைப்படம் எடுத்தல் & அறிக்கை",
+            eyebrow: "புதிய பதிவு",
+            heroTitle: "வாகனம் & உரிமையாளர் ஆவணங்களை படம் எடுக்கவும்",
+            vehicleNoLabel: "வாகன பதிவு எண்",
+            vehicleNoPlaceholder: "KA 01 AB 1234",
+            vehicleNoHint: "வாகன பதிவு எண் அவசியம்",
+            ownerNameLabel: "உரிமையாளர் பெயர்",
+            ownerNamePlaceholder: "முழு பெயர்",
+            ownerNameHint: "உரிமையாளர் பெயர் அவசியம்",
+            mobileNumberLabel: "கைபேசி எண்",
+            mobileNumberPlaceholder: "10 இலக்க கைபேசி எண்",
+            mobileNumberHint: "சரியான கைபேசி எண்ணை உள்ளிடவும்",
+            sectionIdentityTitle: "அடையாள ஆவணங்கள்",
+            sectionIdentityDesc:
+              "ஆதார் அட்டை மற்றும் RC புத்தகம், இரு பக்கங்களும், முந்தைய காப்பீட்டுடன். ஆதார், RC மற்றும் காப்பீட்டை புகைப்படமாக எடுக்கலாம் அல்லது PDF கோப்பாக நேரடியாக பதிவேற்றலாம்.",
+            sectionVehicleTitle: "வாகன புகைப்படங்கள்",
+            sectionVehicleDesc:
+              "வாகனத்தின் நான்கு பக்கங்களும், நல்ல வெளிச்சத்தில்.",
+            gpsToggleTitle: "GPS இருப்பிட குறியீடு",
+            gpsToggleDesc:
+              "கேமரா படம் மற்றும் பதிவேற்றம் இரண்டிலும் வாகன புகைப்படங்களில் இருப்பிடத்தை பதிக்கவும்",
+            gpsToggleOnToast: "GPS இருப்பிட குறியீடு இயக்கப்பட்டது",
+            gpsToggleOffToast: "GPS இருப்பிட குறியீடு முடக்கப்பட்டது",
+            sectionMetaTitle: "மீட்டர் & சேஸி",
+            sectionMetaDesc: "ஓடோமீட்டர் அளவீடு மற்றும் சேஸி எண் தகடு.",
+            footnote:
+              "நீங்கள் PDF-ஐ உருவாக்கும் வரை இந்தப் பக்கத்தில் உள்ள அனைத்தும் இந்த சாதனத்திலேயே இருக்கும். புகைப்படங்கள் சேமிக்கப்படுவதற்கு முன் தானாக சுருக்கப்படும், எனவே உங்கள் கேமரா 10\u00a0MB+ படங்களை எடுத்தாலும் இறுதி கோப்பு நியாயமான அளவில் இருக்கும்.",
+            btnResetTitle: "அனைத்தையும் மீட்டமை",
+            btnGenerate: "PDF-ஐ உருவாக்கி பதிவிறக்கவும்",
+            btnShare: "WhatsApp-இல் பகிரவும்",
+            lightboxAdjust: "கிராப்பை சரிசெய்யவும்",
+            lightboxRetake: "மீண்டும் எடு / மாற்று",
+            lightboxDelete: "நீக்கு",
+            cropperHint:
+              "நீங்கள் விரும்பும் பகுதியை கிராப் செய்ய எந்த மூலையையும் இழுக்கவும். வளைந்த படத்தை நேராக்க ஸ்லைடரைப் பயன்படுத்தவும்.",
+            cropRotateCCWTitle: "90° இடதுபுறம் சுழற்று",
+            cropRotateCWTitle: "90° வலதுபுறம் சுழற்று",
+            cropCancel: "ரத்து செய்",
+            cropReset: "மீட்டமை",
+            cropConfirm: "படத்தை பயன்படுத்து",
+            noImageYet: "இன்னும் படம் இல்லை",
+            noImageOrPdfYet: "இன்னும் படம் அல்லது PDF இல்லை",
+            pdfDocument: "PDF ஆவணம்",
+            page: " பக்கம் · ",
+            pages: " பக்கங்கள் · ",
+            camera: "கேமரா",
+            upload: "பதிவேற்று",
+            view: "பார்வை",
+            retake: "மீண்டும் எடு",
+            replace: "மாற்று",
+            deleteBtn: "நீக்கு",
+            findingLocation: "இருப்பிடத்தை கண்டறிகிறது…",
+            preparingImage: "படத்தை தயார் செய்கிறது…",
+            addingLocationTag: "இருப்பிட குறியீட்டை சேர்க்கிறது…",
+            readingPdfPages: "PDF பக்கங்களை படிக்கிறது…",
+            couldNotReadPdfPages:
+              "அந்த PDF-இலிருந்து எந்த பக்கத்தையும் படிக்க முடியவில்லை",
+            buildingPdf: "உங்கள் PDF-ஐ உருவாக்குகிறது…",
+            preparingPdfShare: "பகிர PDF-ஐ தயார் செய்கிறது…",
+            busyDefault: "செயல்படுத்துகிறது…",
+            restoredSession: "உங்கள் முந்தைய அமர்வு மீட்டெடுக்கப்பட்டது",
+            storageFull:
+              "சேமிப்பகம் நிரம்பியுள்ளது - எதுவும் இழக்காமல் இருக்க விரைவில் PDF-ஐ உருவாக்கி பதிவிறக்கவும்",
+            gpsSkipSuffix:
+              ". தவிர்க்கப்பட்டது - உங்கள் புகைப்படம் இருப்பிட குறியீடு இல்லாமல் சேமிக்கப்பட்டது; மீண்டும் முயற்சிக்க எப்போது வேண்டுமானாலும் மீண்டும் படம் எடுக்கவும்.",
+            gpsStampFailed:
+              "உங்கள் இருப்பிடம் கிடைத்தது ஆனால் படத்தில் குறிக்க முடியவில்லை - குறியீடு இல்லாமல் சேமிக்கப்பட்டது",
+            couldNotProcessImage: "அந்த படத்தை செயல்படுத்த முடியவில்லை",
+            couldNotAttachPdf: "அந்த PDF கோப்பை இணைக்க முடியவில்லை",
+            validationMissingFields:
+              "வாகன எண், உரிமையாளர் பெயர் மற்றும் சரியான கைபேசி எண்ணை நிரப்பவும்",
+            confirmMissingDocsSuffix:
+              " ஆவண புகைப்படங்கள் இன்னும் படம் எடுக்கப்படவில்லை. இருப்பினும் PDF-ஐ உருவாக்கவா?",
+            savedFilenamePrefix: "சேமிக்கப்பட்டது ",
+            couldNotGeneratePdfPrefix: "PDF-ஐ உருவாக்க முடியவில்லை: ",
+            shareCancelled: "பகிர்வு ரத்து செய்யப்பட்டது",
+            pdfDownloadedAttach:
+              "PDF பதிவிறக்கப்பட்டது — WhatsApp-இல் கைமுறையாக இணைக்கவும்",
+            couldNotPreparePdfPrefix: "PDF-ஐ தயார் செய்ய முடியவில்லை: ",
+            confirmReset:
+              "படிவத்தை மீட்டமைக்கவா? உள்ளிடப்பட்ட அனைத்து விவரங்களும் எடுக்கப்பட்ட புகைப்படங்களும் அழிக்கப்படும்.",
+            formReset: "படிவம் மீட்டமைக்கப்பட்டது",
+            updateAvailable:
+              "புதுப்பிப்பு கிடைக்கிறது - சமீபத்திய பதிப்பைப் பயன்படுத்த ஆப்ஸை மீண்டும் திறக்கவும்",
+            errHttps:
+              "இருப்பிடத்திற்கு HTTPS தேவை - GPS குறியீட்டை இயக்க இந்தப் பக்கத்தை https:// வழியாக திறக்கவும்",
+            errFileProtocol:
+              "இந்தப் பக்கம் local file (file://) ஆக திறக்கப்பட்டுள்ளது - Chrome local கோப்புகளில் இருப்பிட அனுமதியை தடுக்கிறது. இதை ஹோஸ்ட் செய்யவும் அல்லது https:// ஆக திறக்கவும்",
+            errNotSupported: "இந்த சாதனத்தில் Geolocation ஆதரிக்கப்படவில்லை",
+            errPermissionBlocked:
+              'இந்த தளத்திற்கு இருப்பிட அனுமதி தடுக்கப்பட்டுள்ளது - முகவரி பட்டியில் உள்ள lock/info ஐகானை தட்டவும் > "Site settings" > Location > Allow, பின் மீண்டும் முயற்சிக்கவும்',
+            errNoFix:
+              "இருப்பிடத்தை பெற முடியவில்லை - உங்கள் தொலைபேசியில் Location Services இயக்கப்பட்டுள்ளதா என சரிபார்க்கவும் (Settings → Location), பின் மீண்டும் முயற்சிக்கவும்",
+            errPermissionDeniedSaved:
+              'இந்த தளத்திற்கு இருப்பிட அணுகல் தடுக்கப்பட்டுள்ளது (முந்தைய "Block" தேர்வு சேமிக்கப்பட்டுள்ளது) - மீண்டும் இயக்கும் வரை Chrome பாப்அப்பை காட்டாது: முகவரி பட்டியில் உள்ள lock/info ஐகானை தட்டவும் > "Site settings" > Location > Allow, பின் மீண்டும் முயற்சிக்கவும்',
+          },
+        };
+        var LANG = "en";
+        try {
+          var savedLang = localStorage.getItem(LANG_KEY);
+          if (savedLang === "en" || savedLang === "ta") LANG = savedLang;
+        } catch (e) {}
+        // T(key): current-language string, falling back to English so a
+        // missing Tamil entry never renders blank.
+        function T(key) {
+          var d = I18N[LANG] || I18N.en;
+          return d[key] !== undefined ? d[key] : I18N.en[key];
+        }
+        // uiTitle(slot): the on-screen document title in the current
+        // language. The PDF report always uses slot.title (English) - see
+        // the i18n note above.
+        function uiTitle(slot) {
+          if (!slot) return "";
+          return LANG === "ta" && slot.titleTa ? slot.titleTa : slot.title;
+        }
 
         var ICONS = {
           card: '<path d="M3 6h18v12H3z"/><path d="M3 10h18"/><path d="M7 14h4"/>',
@@ -28280,6 +28683,20 @@
         SLOTS.forEach(function (s) {
           state[s.id] = null;
         }); // null | {dataURL,w,h,bytes}
+
+        /* ================= GPS tag toggle =================
+     Global on/off switch for the GPS location tag. Defaults to ON. When
+     ON, both the camera-capture path and the upload path for the four
+     gpsTag:true vehicle-side slots get the location stamped (they share
+     the same handleFile() pipeline below, so gating it once here covers
+     both). When OFF, neither path applies a tag. Persisted so the choice
+     survives a reload. */
+        var GPS_TOGGLE_KEY = "vdd_gpsTagEnabled";
+        var gpsTagEnabled = true;
+        try {
+          var savedGps = localStorage.getItem(GPS_TOGGLE_KEY);
+          if (savedGps !== null) gpsTagEnabled = savedGps === "1";
+        } catch (e) {}
 
         /* ================= autosave / restore =================
      Mobile browsers commonly reclaim (silently reload) the page while the
@@ -28388,10 +28805,7 @@
               // disappeared" reports.
               if (!storageWarned) {
                 storageWarned = true;
-                toast(
-                  "Storage is full - generate/download the PDF soon so nothing is lost",
-                  4500,
-                );
+                toast(T("storageFull"), 4500);
               }
             }
           });
@@ -28430,7 +28844,7 @@
                 });
                 updateProgress();
                 setTimeout(function () {
-                  toast("Restored your previous session", 3200);
+                  toast(T("restoredSession"), 3200);
                 }, 300);
               }
             })
@@ -28467,6 +28881,9 @@
           btnReset: document.getElementById("btnReset"),
           btnGenerate: document.getElementById("btnGenerate"),
           btnShare: document.getElementById("btnShare"),
+          gpsToggleInput: document.getElementById("gpsToggleInput"),
+          langBtnEn: document.getElementById("langBtnEn"),
+          langBtnTa: document.getElementById("langBtnTa"),
         };
 
         var activeSlotId = null; // for lightbox
@@ -28483,7 +28900,7 @@
             ICONS[slot.icon] +
             "</svg></div>" +
             '<div class="doc-title">' +
-            slot.title +
+            uiTitle(slot) +
             "</div>" +
             '<div class="doc-status" id="status-' +
             slot.id +
@@ -28493,7 +28910,7 @@
             slot.id +
             '">' +
             '<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/></svg><div>' +
-            (slot.acceptPdf ? "No image or PDF yet" : "No image yet") +
+            (slot.acceptPdf ? T("noImageOrPdfYet") : T("noImageYet")) +
             "</div></div>" +
             "</div>" +
             '<div class="doc-actions" id="actions-' +
@@ -28503,12 +28920,14 @@
             slot.id +
             '">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>' +
-            "Camera</button>" +
+            T("camera") +
+            "</button>" +
             '<button class="btn-tiny" data-act="upload" data-id="' +
             slot.id +
             '">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
-            "Upload</button>" +
+            T("upload") +
+            "</button>" +
             "</div>" +
             '<input class="native-file" type="file" accept="image/*" capture="environment" id="cam-' +
             slot.id +
@@ -28526,49 +28945,58 @@
         SLOTS.forEach(function (s) {
           groups[s.group].push(s);
         });
-        document.getElementById("groupIdentity").innerHTML = groups.identity
-          .map(cardHTML)
-          .join("");
-        document.getElementById("groupVehicle").innerHTML = groups.vehicle
-          .map(cardHTML)
-          .join("");
-        document.getElementById("groupMeta").innerHTML = groups.meta
-          .map(cardHTML)
-          .join("");
 
-        /* wire up per-card events */
-        SLOTS.forEach(function (slot) {
-          var camInput = document.getElementById("cam-" + slot.id);
-          var fileInput = document.getElementById("file-" + slot.id);
-          document
-            .querySelector('[data-act="camera"][data-id="' + slot.id + '"]')
-            .addEventListener("click", function () {
-              camInput.click();
+        /* Builds (or rebuilds) every document card and wires up its events.
+     Re-run on language change - see applyLanguage() - since the card
+     markup embeds language-dependent text (title, "No image yet",
+     Camera/Upload labels) baked in via cardHTML(). Rebuilding is cheap
+     (11 small cards) and keeps a single source of truth for that markup
+     instead of a second update-in-place code path. */
+        function buildCards() {
+          document.getElementById("groupIdentity").innerHTML = groups.identity
+            .map(cardHTML)
+            .join("");
+          document.getElementById("groupVehicle").innerHTML = groups.vehicle
+            .map(cardHTML)
+            .join("");
+          document.getElementById("groupMeta").innerHTML = groups.meta
+            .map(cardHTML)
+            .join("");
+
+          SLOTS.forEach(function (slot) {
+            var camInput = document.getElementById("cam-" + slot.id);
+            var fileInput = document.getElementById("file-" + slot.id);
+            document
+              .querySelector('[data-act="camera"][data-id="' + slot.id + '"]')
+              .addEventListener("click", function () {
+                camInput.click();
+              });
+            document
+              .querySelector('[data-act="upload"][data-id="' + slot.id + '"]')
+              .addEventListener("click", function () {
+                fileInput.click();
+              });
+            camInput.addEventListener("change", function (e) {
+              handleFile(slot.id, e.target.files[0]);
+              e.target.value = "";
             });
-          document
-            .querySelector('[data-act="upload"][data-id="' + slot.id + '"]')
-            .addEventListener("click", function () {
-              fileInput.click();
+            fileInput.addEventListener("change", function (e) {
+              handleFile(slot.id, e.target.files[0]);
+              e.target.value = "";
             });
-          camInput.addEventListener("change", function (e) {
-            handleFile(slot.id, e.target.files[0]);
-            e.target.value = "";
+            document
+              .getElementById("preview-" + slot.id)
+              .addEventListener("click", function () {
+                if (!state[slot.id]) return;
+                if (state[slot.id].type === "pdf") {
+                  openPdfInNewTab(state[slot.id]);
+                } else {
+                  openLightbox(slot.id);
+                }
+              });
           });
-          fileInput.addEventListener("change", function (e) {
-            handleFile(slot.id, e.target.files[0]);
-            e.target.value = "";
-          });
-          document
-            .getElementById("preview-" + slot.id)
-            .addEventListener("click", function () {
-              if (!state[slot.id]) return;
-              if (state[slot.id].type === "pdf") {
-                openPdfInNewTab(state[slot.id]);
-              } else {
-                openLightbox(slot.id);
-              }
-            });
-        });
+        }
+        buildCards();
 
         /* ================= image compression =================
      Wide-angle/high-MP camera shots (48MP/108MP sensors) are the ones most
@@ -28718,11 +29146,7 @@
             // "no GPS signal" unless it's called out on its own, so callers
             // can tell the user the real reason instead of a generic one.
             if (window.isSecureContext === false) {
-              reject(
-                new Error(
-                  "Location needs HTTPS - open this page over https:// to enable GPS tagging",
-                ),
-              );
+              reject(new Error(T("errHttps")));
               return;
             }
             // Opening the file directly (file://...) instead of through a
@@ -28732,15 +29156,11 @@
             // same PERMISSION_DENIED code as a real user denial. Call this
             // out on its own so it isn't mistaken for a genuine denial.
             if (window.location.protocol === "file:") {
-              reject(
-                new Error(
-                  "this page is opened as a local file (file://) - Chrome blocks the location prompt on local files. Host it (even a simple local server) or open it as https:// to enable GPS tagging",
-                ),
-              );
+              reject(new Error(T("errFileProtocol")));
               return;
             }
             if (!navigator.geolocation) {
-              reject(new Error("Geolocation not supported on this device"));
+              reject(new Error(T("errNotSupported")));
               return;
             }
 
@@ -28757,10 +29177,8 @@
                   // 3 = timeout. Keep the distinction instead of collapsing it.
                   var reason =
                     err && err.code === 1
-                      ? 'location permission is blocked for this site - tap the lock/info icon next to the address bar > "Site settings" (or "Permissions") > Location > Allow, then retry'
-                      : err && err.code === 3
-                        ? "Couldn't get a location fix - check that Location Services is turned on for your phone (Settings → Location), then retry"
-                        : "Couldn't get a location fix - check that Location Services is turned on for your phone (Settings → Location), then retry";
+                      ? T("errPermissionBlocked")
+                      : T("errNoFix");
                   reject(new Error(reason));
                 },
                 { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
@@ -28779,11 +29197,7 @@
                 .query({ name: "geolocation" })
                 .then(function (status) {
                   if (status.state === "denied") {
-                    reject(
-                      new Error(
-                        'location access is blocked for this site (a previous "Block" choice is saved) - Chrome will not show the popup again until you re-enable it: tap the lock/info icon next to the address bar > "Site settings" (or "Permissions") > Location > Allow, then retry',
-                      ),
-                    );
+                    reject(new Error(T("errPermissionDeniedSaved")));
                     return;
                   }
                   // "prompt" or "granted" - safe to call, this is what
@@ -28893,7 +29307,8 @@
           var x = n * ((lon + 180) / 360);
           var y =
             (n *
-              (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI)) /
+              (1 -
+                Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI)) /
             2;
           return { pxX: x * 256, pxY: y * 256 };
         }
@@ -28914,7 +29329,14 @@
             img.onerror = function () {
               reject(new Error("tile-load-failed"));
             };
-            img.src = "https://tile.openstreetmap.org/" + z + "/" + xw + "/" + y + ".png";
+            img.src =
+              "https://tile.openstreetmap.org/" +
+              z +
+              "/" +
+              xw +
+              "/" +
+              y +
+              ".png";
           });
         }
         function buildOsmMapThumbnail(lat, lon, targetW, targetH) {
@@ -29128,14 +29550,8 @@
             var mapSize = mapCanvas ? Math.max(56, textBlockH + pad * 0.4) : 0;
             var cardH = pad * 1.2 + Math.max(textBlockH, mapSize);
             var cardW = mapCanvas
-              ? Math.min(
-                  imgResult.w - pad * 2,
-                  innerPad * 3 + mapSize + textW,
-                )
-              : Math.min(
-                  imgResult.w - pad * 2,
-                  Math.round(imgResult.w * 0.72),
-                );
+              ? Math.min(imgResult.w - pad * 2, innerPad * 3 + mapSize + textW)
+              : Math.min(imgResult.w - pad * 2, Math.round(imgResult.w * 0.72));
             var cardY = canvas.height - cardH - pad;
             // Bottom-CENTER instead of bottom-left.
             var cardX = (canvas.width - cardW) / 2;
@@ -29162,8 +29578,20 @@
               ctx.beginPath();
               var mr = 4;
               ctx.moveTo(mapX + mr, mapY);
-              ctx.arcTo(mapX + mapSize, mapY, mapX + mapSize, mapY + mapSize, mr);
-              ctx.arcTo(mapX + mapSize, mapY + mapSize, mapX, mapY + mapSize, mr);
+              ctx.arcTo(
+                mapX + mapSize,
+                mapY,
+                mapX + mapSize,
+                mapY + mapSize,
+                mr,
+              );
+              ctx.arcTo(
+                mapX + mapSize,
+                mapY + mapSize,
+                mapX,
+                mapY + mapSize,
+                mr,
+              );
               ctx.arcTo(mapX, mapY + mapSize, mapX, mapY, mr);
               ctx.arcTo(mapX, mapY, mapX + mapSize, mapY, mr);
               ctx.closePath();
@@ -29223,21 +29651,22 @@
         // once, right after the photo is picked, while the actual pixel
         // stamping happens later, after cropping - see applyGpsMetaToResult.
         function fetchGpsMeta(slot) {
-          if (!slot || !slot.gpsTag) return Promise.resolve(null);
+          if (!slot || !slot.gpsTag || !gpsTagEnabled)
+            return Promise.resolve(null);
           return getGeoPosition().then(
             function (geo) {
-              return reverseGeocodeAddress(geo.lat, geo.lon).then(function (
-                addr,
-              ) {
-                return { geo: geo, addr: addr };
-              });
+              return reverseGeocodeAddress(geo.lat, geo.lon).then(
+                function (addr) {
+                  return { geo: geo, addr: addr };
+                },
+              );
             },
             function (err) {
               // No permission / no signal / insecure origin / timeout -
               // getGeoPosition() already produced a specific reason.
               toast(
-                (err && err.message ? err.message : "Couldn't get a location fix") +
-                  ". Skipped - your photo is saved without a location tag; retake it any time to try again.",
+                (err && err.message ? err.message : T("errNoFix")) +
+                  T("gpsSkipSuffix"),
                 5200,
               );
               return null;
@@ -29270,10 +29699,7 @@
                 mapCanvas,
               ).catch(function (err) {
                 console.error("GPS tag stamping failed:", err);
-                toast(
-                  "Got your location but couldn't stamp it on the photo - saved without a tag",
-                  3800,
-                );
+                toast(T("gpsStampFailed"), 3800);
                 return imgResult;
               });
             });
@@ -29290,13 +29716,17 @@
             return;
           }
           showBusy(
-            slot && slot.gpsTag ? "Finding location…" : "Preparing image…",
+            slot && slot.gpsTag && gpsTagEnabled
+              ? T("findingLocation")
+              : T("preparingImage"),
           );
           var rawResult = null;
           compressImage(file)
             .then(function (result) {
               rawResult = result;
-              return slot && slot.gpsTag ? fetchGpsMeta(slot) : null;
+              return slot && slot.gpsTag && gpsTagEnabled
+                ? fetchGpsMeta(slot)
+                : null;
             })
             .then(function (gpsMeta) {
               hideBusy();
@@ -29316,24 +29746,24 @@
               renderSlot(slotId);
               updateProgress();
               flushPersist();
-              return openCropper(rawResult, slot.title).then(function (
-                cropped,
-              ) {
-                if (!cropped) return null;
-                // Keep the raw, untagged, uncropped shot around so "Adjust
-                // crop" always re-opens on the original image at full size
-                // (see openCropper call sites below) rather than re-cropping
-                // an already-cropped preview.
-                cropped.original = rawResult;
-                if (!rawResult.gpsMeta) return cropped;
-                showBusy("Adding location tag…");
-                return applyGpsMetaToResult(cropped, rawResult.gpsMeta).then(
-                  function (tagged) {
-                    hideBusy();
-                    return tagged;
-                  },
-                );
-              });
+              return openCropper(rawResult, uiTitle(slot)).then(
+                function (cropped) {
+                  if (!cropped) return null;
+                  // Keep the raw, untagged, uncropped shot around so "Adjust
+                  // crop" always re-opens on the original image at full size
+                  // (see openCropper call sites below) rather than re-cropping
+                  // an already-cropped preview.
+                  cropped.original = rawResult;
+                  if (!rawResult.gpsMeta) return cropped;
+                  showBusy(T("addingLocationTag"));
+                  return applyGpsMetaToResult(cropped, rawResult.gpsMeta).then(
+                    function (tagged) {
+                      hideBusy();
+                      return tagged;
+                    },
+                  );
+                },
+              );
             })
             .then(function (cropped) {
               state[slotId] = cropped || previous;
@@ -29343,7 +29773,7 @@
             })
             .catch(function (err) {
               hideBusy();
-              toast(err.message || "Could not process that image");
+              toast(err.message || T("couldNotProcessImage"));
             });
         }
 
@@ -29363,11 +29793,11 @@
                   firstPage.dataURL +
                   '" alt=""/><div class="doc-size-badge">' +
                   pageCount +
-                  (pageCount === 1 ? " page · " : " pages · ") +
+                  (pageCount === 1 ? T("page") : T("pages")) +
                   sizeKB +
                   " KB</div>"
                 : '<div class="ph pdf-ph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>' +
-                  (data.fileName || "PDF document") +
+                  (data.fileName || T("pdfDocument")) +
                   '</div></div><div class="doc-size-badge">' +
                   sizeKB +
                   " KB</div>";
@@ -29386,18 +29816,26 @@
             actions.innerHTML =
               '<button class="btn-tiny" data-act="view" data-id="' +
               slotId +
-              '">View</button>' +
+              '">' +
+              T("view") +
+              "</button>" +
               '<button class="btn-tiny" data-act="camera" data-id="' +
               slotId +
-              '">Retake</button>' +
+              '">' +
+              T("retake") +
+              "</button>" +
               (slotDef && slotDef.acceptPdf
                 ? '<button class="btn-tiny" data-act="upload" data-id="' +
                   slotId +
-                  '">Replace</button>'
+                  '">' +
+                  T("replace") +
+                  "</button>"
                 : "") +
               '<button class="btn-tiny danger" data-act="delete" data-id="' +
               slotId +
-              '">Delete</button>';
+              '">' +
+              T("deleteBtn") +
+              "</button>";
             actions
               .querySelector('[data-act="view"]')
               .addEventListener("click", function () {
@@ -29426,15 +29864,21 @@
           } else {
             preview.classList.remove("has-img");
             preview.innerHTML =
-              '<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/></svg><div>No image yet</div></div>';
+              '<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/></svg><div>' +
+              T("noImageYet") +
+              "</div></div>";
             status.classList.remove("done");
             actions.innerHTML =
               '<button class="btn-tiny primary" data-act="camera" data-id="' +
               slotId +
-              '"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>' +
+              '"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>' +
+              T("camera") +
+              "</button>" +
               '<button class="btn-tiny" data-act="upload" data-id="' +
               slotId +
-              '"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>';
+              '"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+              T("upload") +
+              "</button>";
             actions
               .querySelector('[data-act="camera"]')
               .addEventListener("click", function () {
@@ -29559,14 +30003,14 @@
         }
 
         function handlePdfFile(slotId, file, previous) {
-          showBusy("Reading PDF pages…");
+          showBusy(T("readingPdfPages"));
           Promise.all([readFileAsDataURL(file), pdfFileToPageImages(file)])
             .then(function (res) {
               hideBusy();
               var dataURL = res[0],
                 pages = res[1];
               if (!pages.length) {
-                throw new Error("Could not read any pages from that PDF");
+                throw new Error(T("couldNotReadPdfPages"));
               }
               state[slotId] = {
                 type: "pdf",
@@ -29583,7 +30027,7 @@
               hideBusy();
               state[slotId] = previous;
               renderSlot(slotId);
-              toast(err.message || "Could not attach that PDF file");
+              toast(err.message || T("couldNotAttachPdf"));
             });
         }
 
@@ -29596,7 +30040,7 @@
             return s.id === slotId;
           })[0];
           els.lightboxImg.src = data.dataURL;
-          els.lightboxTitle.textContent = slot.title;
+          els.lightboxTitle.textContent = uiTitle(slot);
           els.lightbox.classList.add("open");
         }
         function closeLightbox() {
@@ -29635,7 +30079,7 @@
             // already-baked pixels that a tighter crop would slice off.
             var source = data.original || data;
             var gpsMeta = source.gpsMeta || null;
-            openCropper(source, slot.title).then(function (cropped) {
+            openCropper(source, uiTitle(slot)).then(function (cropped) {
               if (!cropped) return;
               cropped.original = source;
               function finishAdjust(finalResult) {
@@ -29648,7 +30092,7 @@
                 finishAdjust(cropped);
                 return;
               }
-              showBusy("Adding location tag…");
+              showBusy(T("addingLocationTag"));
               applyGpsMetaToResult(cropped, gpsMeta).then(function (tagged) {
                 hideBusy();
                 finishAdjust(tagged);
@@ -30007,7 +30451,7 @@
           }, ms || 2600);
         }
         function showBusy(text) {
-          els.busyText.textContent = text || "Working…";
+          els.busyText.textContent = text || T("busyDefault");
           els.busy.classList.add("open");
         }
         function hideBusy() {
@@ -30344,8 +30788,7 @@
             });
             pdfDocSlots.forEach(function (slot) {
               var data = state[slot.id];
-              var pages =
-                data.pages && data.pages.length ? data.pages : [data];
+              var pages = data.pages && data.pages.length ? data.pages : [data];
               pages.forEach(function (pageImg, i) {
                 doc.addPage();
                 doc.setFont("helvetica", "bold");
@@ -30408,19 +30851,14 @@
         function withValidation() {
           var ok = validateForm();
           if (!ok) {
-            toast(
-              "Please fill in vehicle number, owner name and a valid mobile number",
-            );
+            toast(T("validationMissingFields"));
             return false;
           }
           var missing = SLOTS.filter(function (s) {
             return !state[s.id];
           }).length;
           if (missing > 0) {
-            var proceed = confirm(
-              missing +
-                " document photo(s) are not captured yet. Generate the PDF anyway?",
-            );
+            var proceed = confirm(missing + T("confirmMissingDocsSuffix"));
             if (!proceed) return false;
           }
           return true;
@@ -30428,23 +30866,23 @@
 
         els.btnGenerate.addEventListener("click", function () {
           if (!withValidation()) return;
-          showBusy("Building your PDF…");
+          showBusy(T("buildingPdf"));
           buildFinalPdfBlob()
             .then(function (blob) {
               var filename = makeFilename();
               downloadBlob(blob, filename);
               hideBusy();
-              toast("Saved " + filename);
+              toast(T("savedFilenamePrefix") + filename);
             })
             .catch(function (err) {
               hideBusy();
-              toast("Could not generate the PDF: " + err.message);
+              toast(T("couldNotGeneratePdfPrefix") + err.message);
             });
         });
 
         els.btnShare.addEventListener("click", function () {
           if (!withValidation()) return;
-          showBusy("Preparing PDF to share…");
+          showBusy(T("preparingPdfShare"));
           buildFinalPdfBlob()
             .then(function (blob) {
               var filename = makeFilename();
@@ -30466,12 +30904,12 @@
                   .catch(function (err) {
                     hideBusy();
                     if (err && err.name !== "AbortError")
-                      toast("Share was cancelled");
+                      toast(T("shareCancelled"));
                   });
               } else {
                 downloadBlob(blob, filename);
                 hideBusy();
-                toast("PDF downloaded — attach it to WhatsApp manually", 4200);
+                toast(T("pdfDownloadedAttach"), 4200);
                 setTimeout(function () {
                   window.open("https://wa.me/", "_blank");
                 }, 600);
@@ -30479,7 +30917,7 @@
             })
             .catch(function (err) {
               hideBusy();
-              toast("Could not prepare the PDF: " + err.message);
+              toast(T("couldNotPreparePdfPrefix") + err.message);
             });
         });
 
@@ -30491,13 +30929,7 @@
             els.vehicleNo.value ||
             els.ownerName.value ||
             els.mobileNumber.value;
-          if (
-            anyData &&
-            !confirm(
-              "Reset the form? All entered details and captured photos will be cleared.",
-            )
-          )
-            return;
+          if (anyData && !confirm(T("confirmReset"))) return;
           SLOTS.forEach(function (s) {
             state[s.id] = null;
             renderSlot(s.id);
@@ -30510,7 +30942,7 @@
           document.getElementById("fieldMobile").classList.remove("invalid");
           updateProgress();
           clearPersisted();
-          toast("Form reset");
+          toast(T("formReset"));
         });
 
         /* ================= PWA: service worker registration =============
@@ -30546,7 +30978,7 @@
                     installing.state === "installed" &&
                     navigator.serviceWorker.controller
                   ) {
-                    toast("Update available - reopen the app to use the latest version", 5000);
+                    toast(T("updateAvailable"), 5000);
                   }
                 });
               });
@@ -30558,7 +30990,77 @@
         }
         registerServiceWorker();
 
+        /* ================= language switch ================= */
+        // Re-applies the current LANG to every translatable element: plain
+        // text via [data-i18n], input placeholders via
+        // [data-i18n-placeholder], and title/aria-label via
+        // [data-i18n-title]. Also rebuilds the document cards (their markup
+        // embeds language-dependent text) and re-renders each slot so any
+        // already-captured photos keep showing correctly after the rebuild.
+        // Only the on-screen UI changes language this way - the generated
+        // PDF report always stays in English (see the i18n note near
+        // I18N above).
+        function applyLanguage() {
+          document.documentElement.lang = LANG === "ta" ? "ta" : "en";
+          var textEls = document.querySelectorAll("[data-i18n]");
+          for (var i = 0; i < textEls.length; i++) {
+            textEls[i].textContent = T(textEls[i].getAttribute("data-i18n"));
+          }
+          var phEls = document.querySelectorAll("[data-i18n-placeholder]");
+          for (var j = 0; j < phEls.length; j++) {
+            phEls[j].placeholder = T(
+              phEls[j].getAttribute("data-i18n-placeholder"),
+            );
+          }
+          var titleEls = document.querySelectorAll("[data-i18n-title]");
+          for (var k = 0; k < titleEls.length; k++) {
+            var val = T(titleEls[k].getAttribute("data-i18n-title"));
+            titleEls[k].title = val;
+            titleEls[k].setAttribute("aria-label", val);
+          }
+          if (els.langBtnEn)
+            els.langBtnEn.classList.toggle("active", LANG === "en");
+          if (els.langBtnTa)
+            els.langBtnTa.classList.toggle("active", LANG === "ta");
+          buildCards();
+          SLOTS.forEach(function (s) {
+            renderSlot(s.id);
+          });
+        }
+        function setLang(lang) {
+          if (lang !== "en" && lang !== "ta") return;
+          if (lang === LANG) return;
+          LANG = lang;
+          try {
+            localStorage.setItem(LANG_KEY, LANG);
+          } catch (e) {}
+          applyLanguage();
+        }
+        if (els.langBtnEn)
+          els.langBtnEn.addEventListener("click", function () {
+            setLang("en");
+          });
+        if (els.langBtnTa)
+          els.langBtnTa.addEventListener("click", function () {
+            setLang("ta");
+          });
+
+        /* ================= GPS tag toggle wiring ================= */
+        if (els.gpsToggleInput) {
+          els.gpsToggleInput.checked = gpsTagEnabled;
+          els.gpsToggleInput.addEventListener("change", function () {
+            gpsTagEnabled = !!this.checked;
+            try {
+              localStorage.setItem(GPS_TOGGLE_KEY, gpsTagEnabled ? "1" : "0");
+            } catch (e) {}
+            toast(
+              gpsTagEnabled ? T("gpsToggleOnToast") : T("gpsToggleOffToast"),
+            );
+          });
+        }
+
         /* ================= init ================= */
+        applyLanguage();
         restorePersisted();
         SLOTS.forEach(function (s) {
           renderSlot(s.id);
