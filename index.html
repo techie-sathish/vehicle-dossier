@@ -1212,8 +1212,8 @@
               GPS location tag
             </div>
             <div class="toggle-row-desc" data-i18n="gpsToggleDesc">
-              Stamp the location on vehicle photos, for both camera capture and
-              upload
+              Stamp the location on vehicle photos, the odometer reading and the
+              chassis number plate, for both camera capture and upload
             </div>
           </div>
           <label class="switch">
@@ -28441,6 +28441,7 @@
             title: "Odometer / KM reading",
             titleTa: "ஓடோமீட்டர் / கி.மீ. அளவீடு",
             icon: "gauge",
+            gpsTag: true,
           },
           {
             id: "chassisNo",
@@ -28449,6 +28450,7 @@
             title: "Chassis number plate",
             titleTa: "சேஸ் எண் தகடு",
             icon: "hash",
+            gpsTag: true,
           },
         ];
 
@@ -28483,7 +28485,7 @@
               "Capture clear photos of all four sides of the vehicle in good lighting or upload",
             gpsToggleTitle: "GPS location tag",
             gpsToggleDesc:
-              "Stamp the location on vehicle photos, for both camera capture and upload",
+              "Stamp the location on vehicle photos, the odometer reading and the chassis number plate, for both camera capture and upload",
             gpsToggleOnToast: "GPS location tagging turned on",
             gpsToggleOffToast: "GPS location tagging turned off",
             sectionMetaTitle: "Others",
@@ -28579,7 +28581,7 @@
               "வாகனத்தின் நான்கு பக்கங்களும், நல்ல வெளிச்சத்தில் புகைபடம் எடுக்கவும் அல்லது பதிவேற்றவும்",
             gpsToggleTitle: "GPS இருப்பிட குறியீடு",
             gpsToggleDesc:
-              "கேமரா படம் மற்றும் பதிவேற்றம் இரண்டிலும் வாகன புகைப்படங்களில் இருப்பிடத்தை பதிக்கவும்",
+              "கேமரா படம் மற்றும் பதிவேற்றம் இரண்டிலும் வாகன புகைப்படங்கள், ஓடோமீட்டர் அளவீடு மற்றும் சேஸ் எண் தகட்டில் இருப்பிடத்தை பதிக்கவும்",
             gpsToggleOnToast: "GPS இருப்பிட குறியீடு இயக்கப்பட்டது",
             gpsToggleOffToast: "GPS இருப்பிட குறியீடு முடக்கப்பட்டது",
             sectionMetaTitle: "மற்றவை",
@@ -28693,7 +28695,8 @@
         /* ================= GPS tag toggle =================
      Global on/off switch for the GPS location tag. Defaults to ON. When
      ON, both the camera-capture path and the upload path for the four
-     gpsTag:true vehicle-side slots get the location stamped (they share
+     gpsTag:true vehicle-side slots plus the odometer/KM
+     reading and chassis number plate in "Others" get the location stamped (they share
      the same handleFile() pipeline below, so gating it once here covers
      both). When OFF, neither path applies a tag. Persisted so the choice
      survives a reload. */
@@ -29137,9 +29140,10 @@
           });
         }
 
-        /* ================= GPS location tag (vehicle photos only) =========
+        /* ================= GPS location tag =========
      Applies only to slots flagged gpsTag:true (the four vehicle side
-     shots) - never to Aadhaar/RC/insurance/odometer/chassis captures.
+     shots, plus the odometer/KM reading and chassis number plate) -
+     never to the Aadhaar/RC/insurance document captures.
      Best-effort throughout: if location permission is denied, the device
      has no signal, or the network calls fail, the plain photo is kept and
      capture is never blocked on this. No third-party map/logo imagery is
