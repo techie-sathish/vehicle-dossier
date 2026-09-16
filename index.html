@@ -130,9 +130,15 @@
         margin: 0 auto;
         padding: 12px 16px;
         display: flex;
+        flex-direction: column; /* Stack top row and progress bar */
+        gap: 14px;
+      }
+      .topbar-row {
+        display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 14px;
+        width: 100%;
       }
       .brand {
         display: flex;
@@ -173,7 +179,8 @@
       .progress-wrap {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
+        width: 100%; /* Take up the full width of topbar-inner */
       }
       .progress-num {
         font-family: var(--font-mono);
@@ -182,7 +189,7 @@
         white-space: nowrap;
       }
       .progress-track {
-        width: 64px;
+        flex: 1; /* Stretch to fill all remaining horizontal space */
         height: 6px;
         border-radius: 99px;
         background: var(--line);
@@ -203,14 +210,6 @@
       /* ---------- hero / plate ---------- */
       .hero {
         padding: 26px 0 6px;
-      }
-      .eyebrow {
-        font-family: var(--font-mono);
-        font-size: 11.5px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        margin: 0 0 8px;
       }
       h1.title {
         font-size: clamp(22px, 4.2vw, 30px);
@@ -1066,48 +1065,54 @@
   <body>
     <div class="topbar">
       <div class="topbar-inner">
-        <div class="brand">
-          <div class="brand-mark">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"
-              />
-              <path
-                d="M3 13h18v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"
-              />
-              <circle cx="7" cy="17" r="0" />
-            </svg>
+        <!-- New wrapper for the top elements -->
+        <div class="topbar-row">
+          <div class="brand">
+            <div class="brand-mark">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"
+                />
+                <path
+                  d="M3 13h18v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"
+                />
+                <circle cx="7" cy="17" r="0" />
+              </svg>
+            </div>
+            <div class="brand-text">
+              <b data-i18n="brandTitle">Vehicle Document Dossier</b>
+              <span data-i18n="brandSubtitle">Field capture &amp; report</span>
+            </div>
           </div>
-          <div class="brand-text">
-            <b data-i18n="brandTitle">Vehicle Document Dossier</b>
-            <span data-i18n="brandSubtitle">Field capture &amp; report</span>
+
+          <div class="topbar-controls">
+            <div
+              class="lang-switch"
+              id="langSwitch"
+              role="group"
+              aria-label="Language"
+            >
+              <button type="button" id="langBtnEn" data-lang="en">EN</button>
+              <button type="button" id="langBtnTa" data-lang="ta">TA</button>
+            </div>
           </div>
         </div>
-        <div class="topbar-controls">
-          <div
-            class="lang-switch"
-            id="langSwitch"
-            role="group"
-            aria-label="Language"
-          >
-            <button type="button" id="langBtnEn" data-lang="en">EN</button>
-            <button type="button" id="langBtnTa" data-lang="ta">TA</button>
-          </div>
-          <div class="progress-wrap">
-            <span class="progress-num" id="progressNum">0 / 10</span>
-            <div class="progress-track">
-              <div
-                class="progress-fill"
-                id="progressFill"
-                style="width: 0%"
-              ></div>
-            </div>
+
+        <!-- Progress bar moved to its own block below -->
+        <div class="progress-wrap">
+          <span class="progress-num" id="progressNum">0 / 10</span>
+          <div class="progress-track">
+            <div
+              class="progress-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
           </div>
         </div>
       </div>
@@ -1115,7 +1120,6 @@
 
     <div class="wrap">
       <div class="hero">
-        <p class="eyebrow" data-i18n="eyebrow">New submission</p>
         <h1 class="title" data-i18n="heroTitle">
           Capture vehicle &amp; owner documents
         </h1>
@@ -1197,7 +1201,8 @@
           <span class="count" data-group-count="vehicle">0 / 4</span>
         </div>
         <p class="section-desc" data-i18n="sectionVehicleDesc">
-          All four sides of the vehicle, in good light.
+          Capture clear photos of all four sides of the vehicle in good lighting
+          or upload.
         </p>
         <div class="toggle-row" id="gpsToggleRow">
           <div class="toggle-row-text">
@@ -1219,7 +1224,7 @@
 
       <div class="section">
         <div class="section-head">
-          <h2 data-i18n="sectionMetaTitle">Meter &amp; chassis</h2>
+          <h2 data-i18n="sectionMetaTitle">Others</h2>
           <span class="count" data-group-count="meta">0 / 2</span>
         </div>
         <p class="section-desc" data-i18n="sectionMetaDesc">
@@ -28457,8 +28462,7 @@
         var I18N = {
           en: {
             brandTitle: "Vehicle Document Dossier",
-            brandSubtitle: "Field capture & report",
-            eyebrow: "New submission",
+            brandSubtitle: "Field capture & report Builder",
             heroTitle: "Capture vehicle & owner documents",
             vehicleNoLabel: "Vehicle registration number",
             vehicleNoPlaceholder: "TN 24 SA 1099",
@@ -28473,13 +28477,14 @@
             sectionIdentityDesc:
               "Aadhaar card and RC book, both sides, plus previous insurance. Aadhaar, RC and insurance can be captured as a photo or uploaded directly as a PDF file.",
             sectionVehicleTitle: "Vehicle photos",
-            sectionVehicleDesc: "All four sides of the vehicle, in good light.",
+            sectionVehicleDesc:
+              "Capture clear photos of all four sides of the vehicle in good lighting or upload",
             gpsToggleTitle: "GPS location tag",
             gpsToggleDesc:
               "Stamp the location on vehicle photos, for both camera capture and upload",
             gpsToggleOnToast: "GPS location tagging turned on",
             gpsToggleOffToast: "GPS location tagging turned off",
-            sectionMetaTitle: "Meter & chassis",
+            sectionMetaTitle: "Others",
             sectionMetaDesc: "Odometer reading and chassis number plate.",
             footnote:
               "Everything on this page stays on this device until you generate the PDF. Photos are automatically compressed before they're saved, so the final file stays a manageable size even if your camera shoots 10\u00a0MB+ images.",
@@ -28554,7 +28559,6 @@
           ta: {
             brandTitle: "வாகன ஆவண கோப்பு",
             brandSubtitle: "புகைப்படம் எடுத்தல் & அறிக்கை",
-            eyebrow: "புதிய பதிவு",
             heroTitle: "வாகனம் & உரிமையாளர் ஆவணங்களை பதிவேற்றவும்",
             vehicleNoLabel: "வாகன பதிவு எண்",
             vehicleNoPlaceholder: "TN 24 SA 1099",
